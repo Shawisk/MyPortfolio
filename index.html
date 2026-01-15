@@ -145,13 +145,20 @@ document.addEventListener('DOMContentLoaded', function () {
       grecaptcha.execute('6LeiOUssAAAAADbS2eWgl--DINiX7iDTDXqtcmwQ', { action: 'submit' })
         .then(function (token) {
 
-          emailjs.send('service_f5mvu3a', 'template_ltaoru2', {
-            name: form.name.value,
-            email: form.email.value,
-            message: form.message.value
-          })
-          .then(function () {
-            window.location.href = 'thanks.html';
+          emailjs.send('service_f5mvu3a','template_ltaoru2',{
+  name: this.name.value,
+  email: this.email.value,
+  message: this.message.value,
+  captcha: token
+}).then(() => {
+  sessionStorage.setItem('formSubmitted', 'true');
+
+  // Small delay for UX + analytics
+  setTimeout(() => {
+    window.location.href = 'thanks.html';
+  }, 1200);
+});
+
           })
           .catch(function (error) {
             console.error('EmailJS error:', error);
