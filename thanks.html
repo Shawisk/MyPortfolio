@@ -38,15 +38,19 @@
 <body>
 
 <script>
-  // Soft guard – only redirect if user NEVER submitted form
-  document.addEventListener('DOMContentLoaded', () => {
-    const submitted = sessionStorage.getItem('formSubmitted');
-    if (!submitted) {
-      // Optional: comment this out if you want public access
-      // window.location.href = 'index.html';
-    }
-  });
+document.addEventListener('DOMContentLoaded', () => {
+  const submitted = sessionStorage.getItem('formSubmitted');
+
+  if (!submitted) {
+    // Optional protection — uncomment if needed
+    window.location.href = 'index.html';
+  } else {
+    // Clear flag so refresh doesn't re-trigger logic
+    sessionStorage.removeItem('formSubmitted');
+  }
+});
 </script>
+
 
 <div class="container d-flex align-items-center justify-content-center min-vh-100">
   <div class="card shadow-lg p-5 text-center" style="max-width: 620px;">
