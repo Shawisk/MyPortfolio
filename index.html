@@ -119,6 +119,7 @@
 <footer class="text-center py-4">
   <p>© 2026 Shawinder Singh · New Zealand · Open to Relocation</p>
 </footer>
+  
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -126,11 +127,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const form = document.getElementById('contactForm');
   const emailError = document.getElementById('emailError');
+  const submitBtn = form.querySelector('button[type="submit"]');
 
-  form.addEventListener('submit', function(e) {
+  form.addEventListener('submit', function (e) {
     e.preventDefault();
 
-    const email = form.email.value.toLowerCase().trim();
+    const name = form.querySelector('input[name="name"]').value.trim();
+    const email = form.querySelector('input[name="email"]').value.trim().toLowerCase();
+    const message = form.querySelector('textarea[name="message"]').value.trim();
+
     const blocked = ['gmail.com','yahoo.com','outlook.com','hotmail.com','icloud.com','live.com'];
     const domain = email.split('@')[1];
 
@@ -141,35 +146,44 @@ document.addEventListener('DOMContentLoaded', function () {
       emailError.classList.add('d-none');
     }
 
+    // UX feedback
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'Sending...';
+
     grecaptcha.ready(function () {
-      grecaptcha.execute('6LeiOUssAAAAADbS2eWgl--DINiX7iDTDXqtcmwQ', { action: 'submit' })
-        .then(function (token) {
+      grecaptcha.execute(
+        '6LeiOUssAAAAADbS2eWgl--DINiX7iDTDXqtcmwQ',
+        { action: 'submit' }
+      ).then(function (token) {
 
-          emailjs.send('service_f5mvu3a','template_ltaoru2',{
-  name: this.name.value,
-  email: this.email.value,
-  message: this.message.value,
-  captcha: token
-}).then(() => {
-  sessionStorage.setItem('formSubmitted', 'true');
+        emailjs.send('service_f5mvu3a', 'template_ltaoru2', {
+          name: name,
+          email: email,
+          message: message,
+          captcha: token
+        })
+        .then(function () {
+          sessionStorage.setItem('formSubmitted', 'true');
 
-  // Small delay for UX + analytics
-  setTimeout(() => {
-    window.location.href = 'thanks.html';
-  }, 1200);
-});
-
-          })
-          .catch(function (error) {
-            console.error('EmailJS error:', error);
-            alert('Message failed to send. Please try again.');
-          });
-
+          // Small delay for UX + GA
+          setTimeout(function () {
+            window.location.href = 'thanks.html';
+          }, 1200);
+        })
+        .catch(function (error) {
+          console.error('EmailJS error:', error);
+          alert('Message failed to send. Please try again.');
+          submitBtn.disabled = false;
+          submitBtn.innerText = 'Send';
         });
+
+      });
     });
   });
+
 });
 </script>
+
 
 </body>
 </html>
