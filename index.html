@@ -107,6 +107,7 @@
         <form id="contactForm" class="card p-4 shadow">
           <div id="emailError" class="alert alert-danger d-none">Please use a business email address.</div>
           <input type="text" name="name" class="form-control mb-3" placeholder="Name" required>
+          <input type="text" name="company" class="form-control mb-3" placeholder="Company / Organisation">
           <input type="email" name="email" class="form-control mb-3" placeholder="Business Email" required>
           <textarea name="message" class="form-control mb-3" placeholder="Message" required></textarea>
           <button type="submit" class="btn btn-primary w-100">Send</button>
@@ -133,6 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
 
     const name = form.querySelector('input[name="name"]').value.trim();
+    const company = form.querySelector('input[name="company"]').value.trim();
     const email = form.querySelector('input[name="email"]').value.trim().toLowerCase();
     const message = form.querySelector('textarea[name="message"]').value.trim();
 
@@ -158,6 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         emailjs.send('service_f5mvu3a', 'template_ltaoru2', {
           name: name,
+          company: company,
           email: email,
           message: message,
           captcha: token
